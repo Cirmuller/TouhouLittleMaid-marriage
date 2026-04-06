@@ -1,0 +1,48 @@
+name: Build Mod JAR
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Remove local proxy settings
+        run: sed -i '/^systemProp\./d' gradle.properties
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build mod JAR
+        run: ./gradlew build --no-daemon
+
+      - name: Upload mod JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: maidmarriage-${{ github.sha }}
+          path: build/libs/*.jar
+          if-no-files-found: error
