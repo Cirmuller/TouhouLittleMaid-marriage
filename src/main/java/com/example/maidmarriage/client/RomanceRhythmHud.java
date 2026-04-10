@@ -169,9 +169,9 @@ public final class RomanceRhythmHud {
             int nx = (int) (tx + n.x);
             int ny = ty + th / 2 - 6;
             int col = n.eighth ? 0xFFFF9A4A : 0xFFE9DEFF;
-            //g.fill(nx, ny, nx + 12, ny + 12, col);
+
+            //使用自己写的渲染代码，以便于旋转、缩放
             n.blit(g,MUSIC,nx,ny-6,0,0,16,32,16,32);
-            //g.blit(MUSIC,nx,ny-6,0,0,16,32,16,32);
         }
 
         String mini = "x" + combo + "  " + judge;
@@ -367,20 +367,6 @@ public final class RomanceRhythmHud {
             lastConfigKeyDown=false;
             return false;
         }
-        /*
-        int key = switch (ModConfigs.rhythmHitKey()) {
-            case J -> GLFW.GLFW_KEY_J;
-            case K -> GLFW.GLFW_KEY_K;
-            case L -> GLFW.GLFW_KEY_L;
-            case SEMICOLON -> GLFW.GLFW_KEY_SEMICOLON;
-            case SPACE -> GLFW.GLFW_KEY_SPACE;
-        };
-
-        boolean down = GLFW.glfwGetKey(mc.getWindow().getWindow(), key) == GLFW.GLFW_PRESS;
-        boolean pressed = down && !lastConfigKeyDown;
-        lastConfigKeyDown = down;
-        return pressed;
-         */
     }
 
     private static float clamp(float v, float min, float max) {
